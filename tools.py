@@ -14,7 +14,6 @@ def get_meta_data(data_path):
 def parse_features(dir_path, exam_id, exam_type, return_date):
     
     file_path = join(dir_path, f"{exam_id}_{exam_type}.csv")
-    
     with open(file_path, 'r') as f:
         lines = f.readlines()[18:126]
         
@@ -35,6 +34,8 @@ def load_features(df_meta, data_path, verbose=True, type_to_include=['gado', 'di
     
     ls_exams = []
     
+    
+    
     for line in df_meta.values:
         
         id_exam = line[0]
@@ -50,6 +51,7 @@ def load_features(df_meta, data_path, verbose=True, type_to_include=['gado', 'di
             diff_features, d2 = parse_features(join(data_path, 'exams'), id_exam, 'DIFF', return_date=True)
             t1_features, d3 = parse_features(join(data_path, 'exams'), id_exam, 'T1', return_date=True)
             t2_features, d4 = parse_features(join(data_path, 'exams'), id_exam, 'T2', return_date=True)
+
         except FileNotFoundError as e:
             if verbose:
                 print(f'Exam {id_exam} wasn\'t found or incomplete')
@@ -76,12 +78,15 @@ def load_features(df_meta, data_path, verbose=True, type_to_include=['gado', 'di
                 't1_features':t1_features,
                 't2_features':t2_features,
                 'features_keys':t2_features.keys()}
+        
         ls_exams.append(exam)
         
     key_to_id = {}
     id_to_key = {}
     
     i = 0
+    
+    
     for mri_type in type_to_include:
         for key in ls_exams[0]['features_keys']:
             unique_key = f"{mri_type}_{key}"
